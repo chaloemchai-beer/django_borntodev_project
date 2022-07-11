@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="col-md-8" id="all_articles">
+    {% for blog in results %}
+    <div>
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-primary">{{blog.category}}</strong>
+                <h3 class="mb-0">{{blog.name}}</h3>
+                <div class="mb-1 text-muted">
+                    <span class="row mx-0 mt-3">created : {{blog.created}}</span>
+                    <span class="row mx-0 mb-3">writer : {{blog.writer}}</span>
+                    <p class="card-text mb-auto">{{blog.description}}</p>
+                    <a href="{% url 'blogDetail' blog.id %}" class="btn btn-primary mt-3">more</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="pagination ">
+                {% if blogs.paginator.num_pages > 1 %}
+                <ul class="pagination justify-content-center">
+                    {% for page_number in blogs.paginator.page_range %}
+                    <li class="page-item"><a class="page-link" href="?page={{page_number}}">{{page_number}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

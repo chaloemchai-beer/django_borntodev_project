@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for blog in popular_h %}
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+    <div class="col-md-6 px-0">
+        <strong class="d-inline-block mb-2 text-dark bg-light rounded p-2">Popular Articles</strong>
+        <strong class="d-inline-block mb-2 text-dark bg-light rounded p-2">{{blog.category}}</strong>
+        <h1 class="display-4 fst-italic">{{blog.name}}</h1>
+        <p class="lead my-3">{{blog.description}}</p>
+        <p class="lead mb-0"><a href="{% url 'blogDetail' blog.id %}" class="btn btn-light mt-3">more</a></p>
+    </div>
+</div>
+{% endfor %}
+
+<div class="row mb-2">
+    <div class="col-md-7">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            {% for blog in recommend_h %}
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-dark">Recommended Articles</strong>
+                <strong class="d-inline-block mb-2 text-primary">{{blog.category}}</strong>
+                <h3 class="mb-0">{{blog.name}}</h3>
+                <div class="mb-1 text-muted">{{blog.created}}</div>
+                <div class="mb-1 text-muted">{{blog.writer}}</div>
+                <p class="card-text mb-auto">{{blog.description}}</p>
+                <a href="{% url 'blogDetail' blog.id %}" class="btn btn-dark mt-3">more</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            {% for blog in latest_h %}
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-dark">Latest Article</strong>
+                <strong class="d-inline-block mb-2 text-success">{{blog.category}}</strong>
+                <h3 class="mb-0">{{blog.name}}</h3>
+                <div class="mb-1 text-muted">{{blog.created}}</div>
+                <div class="mb-1 text-muted">{{blog.writer}}</div>
+                <p class="mb-auto">{{blog.description}}</p>
+                <a href="{% url 'blogDetail' blog.id %}" class="btn btn-dark mt-3">more</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="col-md-8" id="all_articles">
+    <h3 class="pb-4 mb-4 fst-italic border-bottom">
+        All Articles
+    </h3>
+
+    {% for blog in blogs %}
+    <div>
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-primary">{{blog.category}}</strong>
+                <h3 class="mb-0">{{blog.name}}</h3>
+                <div class="mb-1 text-muted">
+                    <span class="row mx-0 mt-3">created : {{blog.created}}</span>
+                    <span class="row mx-0 mb-3">writer : {{blog.writer}}</span>
+                    <p class="card-text mb-auto">{{blog.description}}</p>
+                    <a href="{% url 'blogDetail' blog.id %}" class="btn btn-dark mt-3">more</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="pagination ">
+                {% if blogs.paginator.num_pages > 1 %}
+                <ul class="pagination justify-content-center">
+                    {% for page_number in blogs.paginator.page_range %}
+                    <li class="page-item"><a class="page-link text-dark" href="?page={{page_number}}">{{page_number}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
