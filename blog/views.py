@@ -64,6 +64,7 @@ def resultdata(request, category_id):
 def blogDetail(request, id):
     recommend = Blogs.objects.all().order_by('views')[:4]
     popular = Blogs.objects.all().order_by('-views')[:4]
+    categories = Category.objects.all()
 
     singleBlog = Blogs.objects.get(id=id)
     singleBlog.views = singleBlog.views+1
@@ -73,6 +74,7 @@ def blogDetail(request, id):
         'blog': singleBlog,
         'popular': popular,
         'recommend': recommend,
+        'categories':categories,
     }
 
     return render(request, 'blogDetail.html', data)
