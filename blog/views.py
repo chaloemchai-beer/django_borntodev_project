@@ -1,22 +1,18 @@
-import imp
-from unicodedata import category
 from django.shortcuts import render
 from category.models import Category
-from email_manage.models import Email
 from .models import Blogs
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-# Create your views here.
-def index(request):
-    categories = Category.objects.all()
-    blogs = Blogs.objects.all()
 
+categories = Category.objects.all()
+recommend = Blogs.objects.all().order_by('views')[:4]
+popular = Blogs.objects.all().order_by('-views')[:4]
+
+
+def index(request):
+    blogs = Blogs.objects.all()
     latest = Blogs.objects.all().order_by('-pk')[:4]
     latest_h = Blogs.objects.all().order_by('-pk')[:1]
-
     popular_h = Blogs.objects.all().order_by('-views')[:1]
-    popular = Blogs.objects.all().order_by('-views')[:4]
-
-    recommend = Blogs.objects.all().order_by('views')[:4]
     recommend_h = Blogs.objects.all().order_by('views')[:1]
 
     # pagination
@@ -31,7 +27,7 @@ def index(request):
     except(EmptyPage, InvalidPage):
         blogPerpage = paginator.page(paginator.num_pages)
 
-    data = {
+    context = {
         'categories': categories,
         'blogs': blogPerpage,
         'latest': latest,
@@ -42,43 +38,32 @@ def index(request):
         'recommend_h': recommend_h,
     }
 
-    return render(request, 'index.html', data)
+    return render(request, 'index.html', context)
 
 
 def resultdata(request, category_id):
     results = Blogs.objects.filter(category_id=category_id)
-    categories = Category.objects.all()
-    recommend = Blogs.objects.all().order_by('views')[:4]
-    popular = Blogs.objects.all().order_by('-views')[:4]
 
-    data = {
-        'results': results, 
+    context = {
+        'results': results,
         'categories': categories,
-        'recommend':recommend,
-        'popular':popular
-        }
+        'recommend': recommend,
+        'popular': popular
+    }
 
-    return render(request, 'result.html', data)
+    return render(request, 'result.html', context)
 
 
 def blogDetail(request, id):
-    recommend = Blogs.objects.all().order_by('views')[:4]
-    popular = Blogs.objects.all().order_by('-views')[:4]
-    categories = Category.objects.all()
-
     singleBlog = Blogs.objects.get(id=id)
     singleBlog.views = singleBlog.views+1
     singleBlog.save()
 
-    data = {
+    context = {
         'blog': singleBlog,
         'popular': popular,
         'recommend': recommend,
-        'categories':categories,
+        'categories': categories,
     }
 
-    return render(request, 'blogDetail.html', data)
-
-def post_email(request) :
-    
-    return render(request, 'index.html',{'email':email})
+    return render(request, 'blogDetail.html', context)
